@@ -1,5 +1,10 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SearchController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +18,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Auth::routes([
+    'register' => false
+]);
+
+Route::middleware('auth')->group(function(){
+    Route::get('/', [DashboardController::class, 'index']);
+    Route::resource('/products', ProductController::class);
+    Route::resource('/products/galleries', GalleryController::class);
+
+    Route::get('/product/search', [SearchController::class, 'productSearch'])->name('products.search');
 });
+
+
